@@ -39,6 +39,14 @@
 				colour: "rgb(150, 150, 255)" 
 			},
 			{ 
+				date: "2025-01-07", 
+				name: "CAROL Meteor Shower", 
+				ra: 10.5, 
+				dec: 24.0, 
+				identifier: "Eta_Aquariids", 
+				colour: "rgb(100, 150, 255)" 
+			},			
+			{ 
 				date: "2025-01-10", 
 				name: "Partial Solar Eclipse", 
 				ra: 18.5, 
@@ -119,9 +127,14 @@
 		// Function to add labeled events to the planetarium
 		function addAstronomicalEventLabels() {
 			const currentDate = new Date();
+			const threeDaysLater = new Date();
+			threeDaysLater.setDate(currentDate.getDate() + 3); // Add 3 days to current date
+
 			astronomicalEvents.forEach(event => {
 				const eventDate = new Date(event.date);
-				if (currentDate >= eventDate) {
+
+				// Only show the event if it is today or in the next 3 days
+				if (eventDate.toDateString() === currentDate.toDateString()) {
 					planetarium.addPointer({
 						ra: event.ra, // Right Ascension
 						dec: event.dec, // Declination
@@ -132,6 +145,18 @@
 						colour: event.colour // Label color
 					});
 				}
+				// Only show the event if it is in the next 3 days
+				if (eventDate >= currentDate && eventDate <= threeDaysLater) {
+					planetarium.addPointer({
+						ra: event.ra, // Right Ascension
+						dec: event.dec, // Declination
+						label: event.name, // Event label
+						img: generateSkyMapImage(event.ra, event.dec), // Custom Sky-Map.org image
+						url: generateSIMBADUrl(event.identifier), // SIMBAD URL
+						credit: "SIMBAD", // Credit for the URL
+						colour: event.colour // Label color
+					});
+				}				
 			});
 		}
 
